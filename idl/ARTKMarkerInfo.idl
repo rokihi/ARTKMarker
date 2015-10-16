@@ -2,7 +2,7 @@
 #define ARTK_MARKER_INFO_IDL_INCLUDED
 
 #include <ExtendedDataTypes.idl>
-
+#include "Img.idl"
 module artk {
   
   struct ARTKMarkerInfo {
@@ -54,7 +54,9 @@ module artk {
     /*
      * Position and Orientation of Marker in real world
      */
-    RTC::Pose3D markerPose3D;
+    //RTC::Pose3D markerPose3D;
+
+    Img::Mat44 markerPoseMatrix;
 
   };
 

@@ -1,4 +1,4 @@
-set(idls ${CMAKE_CURRENT_SOURCE_DIR}/ARTKMarkerInfo.idl )
+set(idls ${CMAKE_CURRENT_SOURCE_DIR}/ARTKMarkerInfo.idl ${CMAKE_CURRENT_SOURCE_DIR}/Img.idl )
 
 install(FILES ${idls} DESTINATION ${INC_INSTALL_DIR}/idl
     COMPONENT idl)

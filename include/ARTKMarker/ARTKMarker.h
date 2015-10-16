@@ -16,6 +16,7 @@
 #include <rtm/idl/ExtendedDataTypesSkel.h>
 #include <rtm/idl/InterfaceDataTypesSkel.h>
 #include "ARTKMarkerInfoStub.h"
+#include "ImgStub.h"
 
 #include <rtm/Manager.h>
 #include <rtm/DataFlowComponentBase.h>
@@ -36,6 +37,18 @@
 
 using namespace RTC;
 using namespace artk;
+using namespace Img;
+
+
+#include <coil/Mutex.h>
+#include <opencv2/opencv.hpp>
+
+#include <AR/config.h>
+#include <AR/video.h>
+#include <AR/param.h>			// arParamDisp()
+#include <AR/ar.h>
+#include <AR/gsub_lite.h>
+
 
 /*!
  * @class ARTKMarker
@@ -240,19 +253,37 @@ class ARTKMarker
   int m_debug;
   /*!
    * 
-   * - Name:  param_file_path
-   * - DefaultValue: camera_param.dat
+   * - Name:  markerWidth
+   * - DefaultValue: 0.4
    */
-  std::string m_param_file_path;
+  double m_markerWidth;
+  /*!
+  *
+  * - Name: cameraParamFile
+  * - DefaultValue: Data/camera.param
+  */
+  std::string m_cameraParamFile;
+  /*!
+  *
+  * - Name:  imageWidth
+  * - DefaultValue: 1280
+  */
+  int m_imageWidth;
+  /*!
+  *
+  * - Name:  imageHeight
+  * - DefaultValue: 960
+  */
+  int m_imageHeight;
 
   // </rtc-template>
 
   // DataInPort declaration
   // <rtc-template block="inport_declare">
-  RTC::Acceleration2D m_image;
+  Img::TimedCameraImage m_image;
   /*!
    */
-  InPort<RTC::Acceleration2D> m_imageIn;
+  InPort<Img::TimedCameraImage> m_imageIn;
   
   // </rtc-template>
 
@@ -291,6 +322,31 @@ class ARTKMarker
   
   // </rtc-template>
 
+  coil::Mutex m_MatrixMutex;
+  
+  artk::ARTKMarkerInfo m_MarkerInfo;
+  
+  cv::Mat m_srcImage;
+  ARParam m_cameraParam;
+  ARParamLT* m_pCameraParamLT;
+  ARHandle* m_pARHandle;
+  AR3DHandle* m_pAR3DHandle;
+  
+public:
+
+  
+  void getMarkerInfo(artk::ARTKMarkerInfo& info) {
+    m_MatrixMutex.lock();
+    //info.id = m_MarkerInfo.id;
+    //for (int i = 0; i < 3; i++) {
+    //  for (int j = 0; j < 4; j++) {
+    //info.matrix.value[i][j] = m_MarkerInfo.matrix.value[i][j];
+    //  }
+    //}
+    m_MatrixMutex.unlock();
+  }
+  
+  RTC::ReturnCode_t detectMarker();
 };
 
 
