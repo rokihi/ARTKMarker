@@ -31,7 +31,7 @@ static const char* artkmarker_spec[] =
     "lang_type",         "compile",
     // Configuration variables
     "conf.default.debug", "0",
-    "conf.default.cameraParamFile", "camera_para_isight640x480.dat",
+    "conf.default.cameraParamFile", "camera_para_isight640_480.dat",
     "conf.default.markerWidth", "80",
     "conf.default.imageWidth", "640",
     "conf.default.imageHeight", "480",
@@ -132,6 +132,12 @@ RTC::ReturnCode_t ARTKMarker::onActivated(RTC::UniqueId ec_id)
 		std::cout << "[RTC::ARMarkerDetector] Error loading parameter file " << m_cameraParamFile << std::endl;
 		return RTC::RTC_ERROR;
 	}
+
+	std::cout << "ARParam.version:" << m_cameraParam.dist_function_version << std::endl;
+	for (int i = 0;i < AR_DIST_FACTOR_NUM_MAX;i++) {
+	  std::cout << "ARParam.dist_factor[" << i << "]:" << m_cameraParam.dist_factor[i] << std::endl;
+	}
+
 	
 	if (m_cameraParam.xsize != m_imageWidth || m_cameraParam.ysize != m_imageHeight) {
 		std::cout << "[RTC::ARMarkerDetector] Camera Parameter resized from " << m_cameraParam.xsize << ", " << m_cameraParam.ysize << std::endl;
