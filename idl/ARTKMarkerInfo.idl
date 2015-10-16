@@ -1,0 +1,65 @@
+#ifndef ARTK_MARKER_INFO_IDL_INCLUDED
+#define ARTK_MARKER_INFO_IDL_INCLUDED
+
+#include <ExtendedDataTypes.idl>
+
+module artk {
+  
+  struct ARTKMarkerInfo {
+    /*
+     * Time stamp
+     */
+    RTC::Time tm;
+
+    /*
+     * Identifier number of Marker
+     */
+    long id;
+
+    /*
+     * Identifier string of marker
+     */
+    string name;
+    
+    /*
+     * Confidence of recognition
+     */
+    double confidence;
+
+    /*
+     * Area size of marker in Image [pixel]
+     */
+    long area;
+
+    /*
+     * Coefficients of Line fomula [pixel]
+     */
+    double line[4][3];
+
+    /*
+     * Position of marker vertex [pixel]
+     */
+    RTC::Point2D vertex[4];
+
+    /* 
+     * The size of the image [unit = pixel]
+     */
+    RTC::Size2D imageSize;
+
+    /*
+     * The position of the center of the marker in Image [unit = pixel]
+     */
+    RTC::Point2D positionInImage;
+
+    /*
+     * Position and Orientation of Marker in real world
+     */
+    RTC::Pose3D markerPose3D;
+
+  };
+
+
+};
+
+
+#endif
