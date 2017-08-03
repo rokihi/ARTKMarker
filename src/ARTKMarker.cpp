@@ -53,7 +53,8 @@ ARTKMarker::ARTKMarker(RTC::Manager* manager)
     // <rtc-template block="initializer">
   : RTC::DataFlowComponentBase(manager),
     m_imageIn("image", m_image),
-    m_markerInfoOut("markerInfo", m_markerInfo)
+    m_markerInfoOut("mostConfidentMarkerInfo", m_markerInfo),
+    m_markerInfoSeqOut("markerInfoSeq", m_markerInfoSeq)
 
     // </rtc-template>
 {
@@ -77,6 +78,7 @@ RTC::ReturnCode_t ARTKMarker::onInitialize()
   
   // Set OutPort buffer
   addOutPort("markerInfo", m_markerInfoOut);
+  addOutPort("markerInfoSeq", m_markerInfoSeqOut);
   
   // Set service provider to Ports
   
@@ -192,7 +194,39 @@ RTC::ReturnCode_t ARTKMarker::detectMarker() {
   if (m_pARHandle->marker_num > 0) {
     int mostConfidentIndex = -1;
     double confidence = -1;
+
+    m_markerInfoSeq.length(m_pARHandle->marker_num);
+
     for (int i = 0; i < m_pARHandle->marker_num; i++) {
+
+      ARdouble _trans[3][4];		// Per-marker, but we are using only 1 marker.
+      ARdouble err;
+      err = arGetTransMatSquare(m_pAR3DHandle, &(m_pARHandle->markerInfo[i]), m_markerWidth, _trans);
+      
+      
+      std::stringstream sst;
+      sst << m_pARHandle->markerInfo[i].idMatrix;
+      //m_MarkerInfo.id = CORBA::string_dup(sst.str().c_str());
+      m_MarkerInfo.id = m_pARHandle->markerInfo[i].idMatrix;
+      m_MarkerInfo.name = CORBA::string_dup(sst.str().c_str());
+      int x = 2; int signX = 1;
+      int y = 0; int signY = -1;
+      int z = 1; int signZ = -1;
+      m_MarkerInfo.markerPoseMatrix[0][0] = _trans[x][2];
+      m_MarkerInfo.markerPoseMatrix[0][1] = -_trans[x][0];
+      m_MarkerInfo.markerPoseMatrix[0][2] = -_trans[x][1];
+      m_MarkerInfo.markerPoseMatrix[1][0] = _trans[y][2];
+      m_MarkerInfo.markerPoseMatrix[1][1] = -_trans[y][0];
+      m_MarkerInfo.markerPoseMatrix[1][2] = -_trans[y][1];
+      m_MarkerInfo.markerPoseMatrix[2][0] = _trans[z][2];
+      m_MarkerInfo.markerPoseMatrix[2][1] = -_trans[z][0];
+      m_MarkerInfo.markerPoseMatrix[2][2] = -_trans[z][1];
+      m_MarkerInfo.markerPoseMatrix[0][3] = signX * _trans[x][3] / 1000;
+      m_MarkerInfo.markerPoseMatrix[1][3] = signY * _trans[y][3] / 1000;
+      m_MarkerInfo.markerPoseMatrix[2][3] = signZ * _trans[z][3] / 1000;
+      
+      m_markerInfoSeq[i] = m_MarkerInfo;
+
       if (mostConfidentIndex == -1) {
 	mostConfidentIndex = i; // First marker detected.
 	confidence = m_pARHandle->markerInfo[i].cf;
@@ -243,6 +277,8 @@ RTC::ReturnCode_t ARTKMarker::detectMarker() {
 	}
 	i++;
       }
+
+      m_markerInfo = m_MarkerInfo;
       
     }
   }
@@ -253,6 +289,7 @@ RTC::ReturnCode_t ARTKMarker::detectMarker() {
     
     this->m_MarkerInfo.id = -1;
     this->m_MarkerInfo.name = "";
+    return RTC::RTC_ERROR;
   }
   
   m_MatrixMutex.unlock();
@@ -270,12 +307,11 @@ RTC::ReturnCode_t ARTKMarker::onExecute(RTC::UniqueId ec_id)
 	std::cout << "[RTC::ARMarkerDetector] Image Size do not match." << std::endl;
 	return RTC::RTC_ERROR;
       }
-      detectMarker();
-
-      if (m_MarkerInfo.id >= 0) {
-	m_markerInfo = m_MarkerInfo;
+      if (detectMarker() == RTC::RTC_OK) {
 	m_markerInfoOut.write();
+	m_markerInfoSeqOut.write();
       }
+
     }
     else {
       std::cout << "[RTC::ARMarkerDetector] Failed To Decode Image." << std::endl;

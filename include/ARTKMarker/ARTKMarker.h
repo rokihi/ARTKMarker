@@ -290,11 +290,19 @@ class ARTKMarker
 
   // DataOutPort declaration
   // <rtc-template block="outport_declare">
-  artk::ARTKMarkerInfo m_markerInfo;
+  artk::ARTKMarkerInfo m_mostConfidentMarkerInfo;
   /*!
    * ARTK Marker Info Data (with 2d position and 3d position)
    */
-  OutPort<artk::ARTKMarkerInfo> m_markerInfoOut;
+  OutPort<artk::ARTKMarkerInfo> m_mostConfidentMarkerInfoOut;
+
+  // DataOutPort declaration
+  // <rtc-template block="outport_declare">
+  artk::ARTKMarkerInfoSeq m_markerInfoSeq;
+  /*!
+   * ARTK Marker Info Data (with 2d position and 3d position)
+   */
+  OutPort<artk::ARTKMarkerInfoSeq> m_markerInfoSeqOut;
   
   // </rtc-template>
 
