@@ -47,8 +47,11 @@
       <rtcDoc:Doc rtcDoc:description="" rtcDoc:postCondition="" rtcDoc:preCondition=""/>
     </rtc:OnModeChanged>
   </rtc:Actions>
-  <rtc:DataPorts rtc:dataflowType="" rtc:idlFile="" rtc:interfaceType="" rtc:name="markerInfo" rtc:portType="DataOutPort" rtc:subscriptionType="" rtc:type="artk::ARTKMarkerInfo" rtc:unit="" rtcExt:position="RIGHT" rtcExt:variableName="markerInfo" xsi:type="rtcExt:dataport_ext">
+  <rtc:DataPorts rtc:dataflowType="" rtc:idlFile="" rtc:interfaceType="" rtc:name="mostConfidentMarkerInfo" rtc:portType="DataOutPort" rtc:subscriptionType="" rtc:type="artk::ARTKMarkerInfo" rtc:unit="" rtcExt:position="RIGHT" rtcExt:variableName="markerInfo" xsi:type="rtcExt:dataport_ext">
     <rtcDoc:Doc rtcDoc:description="ARTK Marker Info Data (with 2d position and 3d position)" rtcDoc:number="" rtcDoc:occerrence="" rtcDoc:operation="" rtcDoc:semantics="" rtcDoc:type="" rtcDoc:unit=""/>
+  </rtc:DataPorts>
+  <rtc:DataPorts rtc:dataflowType="" rtc:idlFile="" rtc:interfaceType="" rtc:name="markerInfoSeq" rtc:portType="DataOutPort" rtc:subscriptionType="" rtc:type="artk::ARTKMarkerInfoSeq" rtc:unit="" rtcExt:position="RIGHT" rtcExt:variableName="markerInfoSeq" xsi:type="rtcExt:dataport_ext">
+    <rtcDoc:Doc rtcDoc:description="All ARTK Marker Info Data (with 2d position and 3d position)" rtcDoc:number="" rtcDoc:occerrence="" rtcDoc:operation="" rtcDoc:semantics="" rtcDoc:type="" rtcDoc:unit=""/>
   </rtc:DataPorts>
   <rtc:ConfigurationSet>
     <rtc:Configuration rtc:defaultValue="0" rtc:name="debug" rtc:type="int" rtc:unit="" rtcExt:variableName="debug" xsi:type="rtcExt:configuration_ext">
