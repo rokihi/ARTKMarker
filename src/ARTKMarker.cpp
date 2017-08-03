@@ -271,6 +271,11 @@ RTC::ReturnCode_t ARTKMarker::onExecute(RTC::UniqueId ec_id)
 	return RTC::RTC_ERROR;
       }
       detectMarker();
+
+      if (m_MarkerInfo.id >= 0) {
+	m_markerInfo = m_MarkerInfo;
+	m_markerInfoOut.write();
+      }
     }
     else {
       std::cout << "[RTC::ARMarkerDetector] Failed To Decode Image." << std::endl;
