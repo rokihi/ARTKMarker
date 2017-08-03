@@ -77,7 +77,7 @@ RTC::ReturnCode_t ARTKMarker::onInitialize()
   addInPort("image", m_imageIn);
   
   // Set OutPort buffer
-  addOutPort("markerInfo", m_markerInfoOut);
+  addOutPort("mostConfidentMarkerInfo", m_markerInfoOut);
   addOutPort("markerInfoSeq", m_markerInfoSeqOut);
   
   // Set service provider to Ports
