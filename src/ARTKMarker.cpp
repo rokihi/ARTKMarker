@@ -53,7 +53,7 @@ ARTKMarker::ARTKMarker(RTC::Manager* manager)
     // <rtc-template block="initializer">
   : RTC::DataFlowComponentBase(manager),
     m_imageIn("image", m_image),
-    m_markerInfoOut("mostConfidentMarkerInfo", m_markerInfo),
+	m_mostConfidentMarkerInfoOut("mostConfidentMarkerInfo", m_mostConfidentMarkerInfo),
     m_markerInfoSeqOut("markerInfoSeq", m_markerInfoSeq)
 
     // </rtc-template>
@@ -77,7 +77,7 @@ RTC::ReturnCode_t ARTKMarker::onInitialize()
   addInPort("image", m_imageIn);
   
   // Set OutPort buffer
-  addOutPort("mostConfidentMarkerInfo", m_markerInfoOut);
+  addOutPort("mostConfidentMarkerInfo", m_mostConfidentMarkerInfoOut);
   addOutPort("markerInfoSeq", m_markerInfoSeqOut);
   
   // Set service provider to Ports
@@ -278,7 +278,7 @@ RTC::ReturnCode_t ARTKMarker::detectMarker() {
 	i++;
       }
 
-      m_markerInfo = m_MarkerInfo;
+	  m_mostConfidentMarkerInfo = m_MarkerInfo;
       
     }
   }
@@ -308,7 +308,7 @@ RTC::ReturnCode_t ARTKMarker::onExecute(RTC::UniqueId ec_id)
 	return RTC::RTC_ERROR;
       }
       if (detectMarker() == RTC::RTC_OK) {
-	m_markerInfoOut.write();
+		  m_mostConfidentMarkerInfoOut.write();
 	m_markerInfoSeqOut.write();
       }
 
